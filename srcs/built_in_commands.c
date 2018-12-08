@@ -1,24 +1,20 @@
 #include "minishell.h"
 
-int		is_exe(const char *exe_path)
-{
-	struct stat s;
-
-	stat(exe_path, &s);
-	return ((((s.st_mode & S_IXUSR) > 0) ? TRUE : FALSE));
-}
-
 void		run_exe(const char *exe_path, char **args)
 {
-	int	pid;
-	int	status;
+	pid_t	pid;
+	int		status;
 
 	if (is_exe(exe_path) == FALSE)
 		return ;
 	pid = fork();
 	if (pid == 0)
+	{
+		ft_printf("running: %s\n", exe_path);
 		execve(exe_path, args, NULL);
-	waitpid(pid, &status, 0);
+	}
+	wait(&pid);
+	ft_printf("closing: %s\n", exe_path);
 }
 
 void		mini_echo(char *str)
@@ -33,9 +29,15 @@ void		mini_echo(char *str)
 	free(echo);
 }
 
-void		mini_env(t_mini *mini)
+void		mini_env(t_env *env)
 {
-	if (mini->ev == NULL)
-		ft_printf("no list\n");
-	print_list(mini->ev);
+	t_env	*cur;
+
+	cur = env;
+	int i = -1;
+	while (cur != NULL)
+	{
+		ft_printf("%d: %s=%s\n", cur->position + 1, cur->name, cur->value);
+		cur = cur->next;
+	}
 }

@@ -45,42 +45,66 @@
 //	- Docking town
 //	- Basic town
 
-static void	update_cd(t_mini *mini)
+static void	explicit_directory(char *path, t_mini *mini)
 {
-	if (mini->cd)
-		free(mini->cd);
-	mini->cd = current_directory(mini->ev[10]);
+	chdir(path);
+	update_pwd(mini->env);
+	update_cd(mini);
 }
 
 static void	previous_directory(t_mini *mini)
 {
-	char	*prev;
-
-	prev = ft_strndup((mini->ev[10] + 4), ft_strlen(mini->ev[10] + 4) - ft_strlen(mini->cd) - 1);
-	mini->ev[10] = ft_strjoin("PWD=", prev);
-	chdir(mini->ev[10] + 4);
-	free(prev);
+	chdir("..");
+	update_pwd(mini->env);
 	update_cd(mini);
 }
 
 static void	next_directory(char *dir, t_mini *mini)
 {
-	char	*temp;
+	char	*next;
 
-	temp = ft_strdup(dir);
-	if (temp[0] != '/')
-		temp = ft_strjoin("/", temp);
-	mini->ev[10] = ft_strjoin(mini->ev[10], temp);
-	chdir(mini->ev[10] + 4);
+	next = ft_strjoin("./", dir);
+	chdir(next);
+	free(next);
+	update_pwd(mini->env);
 	update_cd(mini);
+}
+
+void		special(t_mini *mini)
+{
+	char	*path_complete;
+
+	path_complete = NULL;
+	if (mini->av[1] == NULL)
+		return ;
+	else if (mini->av[1][0] == '~')
+	{
+		if (mini->av[1][1] != '\0')
+			path_complete = ft_strjoin(env_search(mini->env, "HOME"), mini->av[1] + 1);
+		else
+			path_complete = ft_strdup(env_search(mini->env, "HOME"));
+	}
+	else if (is_dir(mini->av[1]) == TRUE)
+		path_complete = ft_strdup(mini->av[1]);
+	if (is_dir(path_complete) == TRUE)
+	{
+		explicit_directory(path_complete, mini);
+		free(path_complete);
+	}
+	else
+		ft_printf("%s: not a valid directory\n", path_complete);
 }
 
 void		mini_cd(char *path, t_mini *mini)
 {
 	if (path == NULL || ft_strcmp(path, ".") == 0)
 		return ;
-	if (ft_strcmp(path, "..") == 0)
+	else if (path[0] == '~' || ft_strcmp(path, "/tmp") == 0)
+		special(mini);
+	else if (ft_strcmp(path, "..") == 0)
 		previous_directory(mini);
 	else if (is_dir(path))
 		next_directory(path, mini);
+	else
+		ft_printf("%s: not a valid directory\n", path);
 }
