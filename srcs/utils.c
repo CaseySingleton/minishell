@@ -16,6 +16,34 @@ int		is_exe(const char *exe_path)
 	return ((((s.st_mode & S_IXUSR) > 0) ? TRUE : FALSE));
 }
 
+char		**env_to_list(t_env *env)
+{
+	t_env	*cur;
+	char	**list;
+	int		len;
+
+	cur = env;
+	len = 0;
+	while (cur != NULL)
+	{
+		cur = cur->next;
+		len++;
+	}
+	if (!(list = (char **)malloc(sizeof(char *) * len)))
+		return (NULL);
+	list[len] = NULL;
+	cur = env;
+	len = 0;
+	while (cur != NULL)
+	{
+		list[len] = ft_strjoin(cur->name, "=");
+		list[len] = ft_strjoin(list[len], cur->value);
+		cur = cur->next;
+		len++;
+	}
+	return (list);
+}
+
 void		print_list(char **list)
 {
 	int	i;

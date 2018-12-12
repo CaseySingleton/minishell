@@ -1,20 +1,21 @@
 #include "minishell.h"
 
-void		run_exe(const char *exe_path, char **args)
+void		run_exe(const char *exe_path, char **args, char **envs)
 {
-	pid_t	pid;
-	int		status;
+	pid_t	child;
 
-	if (is_exe(exe_path) == FALSE)
-		return ;
-	pid = fork();
-	if (pid == 0)
+	if (is_exe(exe_path) == FALSE || ft_strlen(exe_path) == 2)
 	{
-		ft_printf("running: %s\n", exe_path);
-		execve(exe_path, args, NULL);
+		ft_printf("Invalid binary: %s\n", exe_path);
+		return ;
 	}
-	wait(&pid);
-	ft_printf("closing: %s\n", exe_path);
+	child = fork();
+	if (child < 0)
+		ft_printf("Fork error\n");
+	else if (child == 0)
+		execve(exe_path, args, envs);
+	else
+		wait(&child);
 }
 
 void		mini_echo(char *str)

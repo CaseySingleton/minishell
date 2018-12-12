@@ -11,6 +11,26 @@ int		only_spaces(char *str)
 	return (1);
 }
 
+int			check_bin_for_exe(t_mini *mini)
+{
+	char	*bin_path;
+	char	**env;
+	int		check;
+
+	bin_path = ft_strjoin("/bin/", mini->av[0]);
+	check = is_exe(bin_path);
+	if (check == TRUE)
+	{
+		env = env_to_list(mini->env);
+		run_exe(bin_path, mini->av, env);
+		if (env)
+			free(env);
+	}
+	if (bin_path)
+		free(bin_path);
+	return (check);
+}
+
 void		commands(t_mini *mini)
 {
 	if (ft_strcmp(mini->av[0], "exit") == 0)
@@ -23,20 +43,18 @@ void		commands(t_mini *mini)
 		hostname(mini);
 	else if (ft_strcmp(mini->av[0], "echo") == 0)
 		mini_echo(mini->raw_input + 5);
-	else if (ft_strcmp(mini->av[0], "ls") == 0)
-		run_exe("/bin/ls", mini->av);
-	else if (ft_strncmp(mini->av[0], "./", 2) == 0)
-		run_exe(mini->av[0], mini->av);
 	else if (ft_strcmp(mini->av[0], "env") == 0)
 		mini_env(mini->env);
-	else
+	else if (check_bin_for_exe(mini) == FALSE)
 		ft_printf("command: %s: not found\n", mini->av[0]);
+	// else if (ft_strncmp(mini->av[0], "./", 2) == 0)
+		// run_exe(mini);
 	free_list(&(mini->av));
 }
 
 void		mini_loop(t_mini *mini)
 {
-	mini->name = ft_strdup("Casey");
+	mini->name = ft_strdup("🐢");
 	update_cd(mini);
 	while (1)
 	{
@@ -50,12 +68,12 @@ void		mini_loop(t_mini *mini)
 	}
 }
 
-void		minishell(char *evnp[])
+void		minishell(char *envp[])
 {
+	ft_printf("Starting tutrleshell\n");
 	t_mini	mini;
 
-	mini.ev = evnp;
 	ft_bzero(&mini, sizeof(t_mini));
-	env_init(&(mini.env), evnp);
+	env_init(&(mini.env), envp);
 	mini_loop(&mini);
 }

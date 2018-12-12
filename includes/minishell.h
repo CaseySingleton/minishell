@@ -9,6 +9,11 @@
 
 # define TRUE 1
 # define FALSE 0
+# define ERROR -1
+
+/*
+**	¯\\_(ツ)_/¯
+*/
 
 typedef struct		s_env
 {
@@ -21,7 +26,6 @@ typedef struct		s_env
 typedef struct		s_mini
 {
 	char			**av;
-	char			**ev;
 	int				ac;
 	t_env			*env;
 	char			*name;
@@ -42,7 +46,7 @@ void				minishell(char **ev);
 **	built_in_commands.c
 */
 
-void				run_exe(const char *exe_path, char **args);
+void				run_exe(const char *exe_path, char **args, char **envs);
 void				mini_echo(char *str);
 void				mini_env(t_env *env);
 void				mini_cd(char *path, t_mini *mini);
@@ -90,6 +94,7 @@ char				*env_search(t_env *env, char *name);
 int					is_exe(const char *exe_path);
 int					is_dir(char *dir);
 char				*last_word_delim(char *str, int delim);
+char				**env_to_list(t_env *env);
 void				print_list(char **list);
 char				**ft_lstdup(char **list);
 void				free_list(char ***list);

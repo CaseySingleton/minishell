@@ -9,6 +9,7 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	minishell(envp);
+	ft_printf("%s\n", envp[6]);
 	// while (1)
 	// 	;
 	return (0);
