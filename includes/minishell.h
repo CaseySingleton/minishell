@@ -38,7 +38,6 @@ typedef struct		s_mini
 **	minishell.c
 */
 
-void				mini_loop(t_mini *mini);
 void				minishell(char **ev);
 
 /*
@@ -48,35 +47,32 @@ void				minishell(char **ev);
 void				run_exe(const char *exe_path, char **args, char **envs);
 void				mini_run(t_mini *mini);
 void				mini_echo(char *str);
+void				mini_pwd(void);
 int					mini_env(t_env *env);
-void				mini_cd(char *path, t_mini *mini);
 
 /*
 **	cd_command.c
 */
 
 void				mini_cd(char *path, t_mini *mini);
+void				cd_special(t_mini *mini);
 
 /*
 **	extra_commands.c
 */
 
 void				hostname(t_mini *mini);
+int					check_bin_for_exe(t_mini *mini);
 
 /*
 **	environment.c
 */
 
-void				update_pwd(t_env *env);
+void				update_pwd(t_mini *mini);
 void				update_cd(t_mini *mini);
+void				env_init(t_env **env, char *envp[]);
 void				env_set(t_mini *mini);
 void				env_unset(t_mini *mini);
-
-/*
-**	interface.c
-*/
-
-void				mini_pwd(void);
 
 /*
 **	list_function.c
@@ -85,20 +81,17 @@ void				mini_pwd(void);
 t_env				*env_new_node(char *name, char *value);
 void				env_push(t_env **list, t_env *to_add);
 void				env_free_node(t_env **node);
-void				env_free(t_env **list);
-void				env_init(t_env **env, char *envp[]);
+// void				env_free(t_env **list);
 char				*env_search(t_env *env, char *name);
 
 /*
 **	utils.c
 */
 
-int					is_exe(const char *exe_path);
 int					is_dir(char *dir);
-char				*last_word_delim(char *str, int delim);
+int					is_exe(const char *exe_path);
 char				**env_to_list(t_env *env);
-void				print_list(char **list);
-char				**ft_lstdup(char **list);
+char				*last_word_delim(char *str, int delim);
 void				free_list(char ***list);
 
 #endif

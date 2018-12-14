@@ -1,26 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/12/13 21:03:16 by csinglet          #+#    #+#             */
+/*   Updated: 2018/12/13 21:03:17 by csinglet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void		update_pwd(t_env *env)
+void		update_pwd(t_mini *mini)
 {
 	t_env	*cur;
 
-	cur = env;
+	cur = mini->env;
 	while (cur != NULL)
 	{
 		if (ft_strcmp(cur->name, "PWD") == 0)
 		{
 			free(cur->value);
 			cur->value = getcwd(NULL, 0);
+			break ;
 		}
 		cur = cur->next;
 	}
+	if (cur == NULL)
+		env_push(&(mini->env), env_new_node(ft_strdup("PWD"), getcwd(NULL, 0)));
 }
 
 void		update_cd(t_mini *mini)
 {
+	t_env	*cur;
+
+	cur = mini->env;
 	if (mini->cd)
+	{
 		free(mini->cd);
-	mini->cd = last_word_delim(env_search(mini->env, "PWD"), '/');
+		mini->cd = NULL;
+	}
+	while (cur != NULL)
+	{
+		if (ft_strcmp(cur->name, "PWD") == 0)
+			mini->cd = last_word_delim(cur->value, '/');
+		cur = cur->next;
+	}
 	if (mini->cd == NULL)
 		mini->cd = ft_strdup("/");
 }
@@ -37,17 +63,6 @@ void		env_init(t_env **env, char *envp[])
 		env_push(env, env_new_node(params[0], params[1]));
 		free_list(&params);
 	}
-}
-
-int			mini_env(t_env *env)
-{
-	int		i;
-
-	if (env == NULL)
-		return (0);
-	i = mini_env(env->next) + 1;
-	ft_printf("%d: %s=%s\n", i, env->name, env->value);
-	return (i);
 }
 
 void		env_set(t_mini *mini)

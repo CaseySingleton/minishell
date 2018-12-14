@@ -16,7 +16,7 @@ CC		= gcc
 CFLAGS	= -Wall -Werror -Wextra -O3
 FLAGS	= $(CFLAGS)
 
-FILES	= main.c minishell.c built_in_commands.c extra_commands.c interface.c \
+FILES	= main.c minishell.c built_in_commands.c extra_commands.c \
 		  utils.c cd_command.c environment.c list_functions.c
 
 OBJ	= $(addprefix build/, $(FILES:.c=.o))

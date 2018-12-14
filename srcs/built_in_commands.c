@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_in_commands.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/12/13 21:04:06 by csinglet          #+#    #+#             */
+/*   Updated: 2018/12/13 21:04:07 by csinglet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void		run_exe(const char *exe_path, char **args, char **envs)
@@ -10,7 +22,7 @@ void		run_exe(const char *exe_path, char **args, char **envs)
 	else if (child == 0)
 	{
 		execve(exe_path, args, envs);
-		exit (0);
+		exit(0);
 	}
 	else
 		wait(&child);
@@ -40,4 +52,24 @@ void		mini_echo(char *str)
 		ft_copy_until(&echo, str, ' ');
 	ft_printf("%s\n", echo);
 	free(echo);
+}
+
+void		mini_pwd(void)
+{
+	char	*wd;
+
+	wd = getcwd(NULL, 0);
+	ft_printf("%s\n", wd);
+	free(wd);
+}
+
+int			mini_env(t_env *env)
+{
+	int		i;
+
+	if (env == NULL)
+		return (0);
+	i = mini_env(env->next) + 1;
+	ft_printf("%d: %s=%s\n", i, env->name, env->value);
+	return (i);
 }

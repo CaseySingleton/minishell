@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_list_dup.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/12/13 21:03:27 by csinglet          #+#    #+#             */
-/*   Updated: 2018/12/13 21:03:30 by csinglet         ###   ########.fr       */
+/*   Created: 2018/12/14 14:16:20 by csinglet          #+#    #+#             */
+/*   Updated: 2018/12/14 14:16:35 by csinglet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-/*
-**	Notes:
-**	  - Still need to do the thing with ENV variables
-**	  - Add some cool extra stuff. Like maybe a game of some sort
-*/
-
-int	main(int argc, char *argv[], char *envp[])
+char			**ft_lstdup(char **list)
 {
-	minishell(envp);
-	while (1)
+	char		**list_cpy;
+	int			i;
+
+	i = -1;
+	while (list[++i] != NULL)
 		;
-	return (0);
+	if (!(list_cpy = (char **)malloc(sizeof(char *) * (i + 1))))
+		return (NULL);
+	list_cpy[i] = NULL;
+	i = -1;
+	while (list[++i] != NULL)
+		list_cpy[i] = ft_strdup(list[i]);
+	return (list_cpy);
 }
