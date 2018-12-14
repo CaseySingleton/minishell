@@ -6,4 +6,5 @@ void		mini_pwd(void)
 
 	wd = getcwd(NULL, 0);
 	ft_printf("%s\n", wd);
+	free(wd);
 }

@@ -17,7 +17,6 @@
 
 typedef struct		s_env
 {
-	int				position;
 	char			*name;
 	char			*value;
 	struct s_env	*next;
@@ -47,8 +46,9 @@ void				minishell(char **ev);
 */
 
 void				run_exe(const char *exe_path, char **args, char **envs);
+void				mini_run(t_mini *mini);
 void				mini_echo(char *str);
-void				mini_env(t_env *env);
+int					mini_env(t_env *env);
 void				mini_cd(char *path, t_mini *mini);
 
 /*
@@ -69,6 +69,8 @@ void				hostname(t_mini *mini);
 
 void				update_pwd(t_env *env);
 void				update_cd(t_mini *mini);
+void				env_set(t_mini *mini);
+void				env_unset(t_mini *mini);
 
 /*
 **	interface.c
@@ -80,9 +82,9 @@ void				mini_pwd(void);
 **	list_function.c
 */
 
-t_env				*env_new_node(char *name, char *value, int position);
-void				env_add_end(t_env **list, t_env *to_add);
-void				env_remove_node(t_env **node);
+t_env				*env_new_node(char *name, char *value);
+void				env_push(t_env **list, t_env *to_add);
+void				env_free_node(t_env **node);
 void				env_free(t_env **list);
 void				env_init(t_env **env, char *envp[]);
 char				*env_search(t_env *env, char *name);

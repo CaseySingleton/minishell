@@ -29,17 +29,15 @@ char		**env_to_list(t_env *env)
 		cur = cur->next;
 		len++;
 	}
-	if (!(list = (char **)malloc(sizeof(char *) * len)))
+	if (!(list = (char **)malloc(sizeof(char *) * len + 1)))
 		return (NULL);
 	list[len] = NULL;
 	cur = env;
-	len = 0;
 	while (cur != NULL)
 	{
-		list[len] = ft_strjoin(cur->name, "=");
-		list[len] = ft_strjoin(list[len], cur->value);
+		list[--len] = ft_strjoin(cur->name, "=");
+		list[len] = ft_strjoin_free_s1(list[len], cur->value);
 		cur = cur->next;
-		len++;
 	}
 	return (list);
 }
