@@ -22,5 +22,5 @@ char	*ft_strchr(const char *src, int waldo)
 	}
 	if (*src == waldo)
 		return ((char *)src);
-	return (0);
+	return (NULL);
 }

@@ -26,24 +26,23 @@ char			**ft_strsplit(char const *s, char c)
 {
 	char			**splits;
 	int				word_count;
-	int				index;
+	int				i;
+	int				j;
 
 	if (s == NULL)
 		return (0);
 	word_count = ft_wrdcount(s, c);
-	index = -1;
 	if (!(splits = (char **)malloc((sizeof(char *) * (word_count + 1)))))
 		return (NULL);
 	splits[word_count] = NULL;
-	while (++index < word_count)
+	i = -1;
+	j = 0;
+	while (++i < word_count)
 	{
-		while (*s == c && *s != '\0')
-			s++;
-		splits[index] = ft_strsub(s, 0, ft_wrdlen(s, c));
-		if (splits[index] == NULL)
-			break ;
-		s += ft_wrdlen(s, c);
+		while (s[j] == c && s[j] != '\0')
+			j++;
+		splits[i] = ft_strsub(s + j, 0, ft_wrdlen(s + j, c));
+		j += ft_wrdlen(s + j, c);
 	}
-	splits[word_count] = NULL;
 	return (splits);
 }

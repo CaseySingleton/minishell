@@ -18,22 +18,18 @@ char	*ft_strjoin_free_s2(const char *s1, char *s2)
 	int		len;
 	int		i;
 	int		j;
-	int		index;
 
 	if (s1 == NULL || s2 == NULL)
-		return (0);
+		return (NULL);
 	len = ft_strlen(s1) + ft_strlen(s2);
 	new_str = ft_strnew(len);
-	i = 0;
-	j = 0;
-	index = -1;
-	while (++index < len)
-	{
-		if (s1[i])
-			new_str[index] = s1[i++];
-		else if (s2[j])
-			new_str[index] = s2[j++];
-	}
+	i = -1;
+	while (s1[++i] != '\0')
+		new_str[i] = s1[i];
+	j = -1;
+	while (s2[++j] != '\0')
+		new_str[i + j] = s2[j];
 	free(s2);
+	s2 = NULL;
 	return (new_str);
 }

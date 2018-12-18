@@ -6,7 +6,7 @@
 /*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/24 17:03:02 by csinglet          #+#    #+#             */
-/*   Updated: 2018/12/14 14:17:06 by csinglet         ###   ########.fr       */
+/*   Updated: 2018/12/14 15:20:15 by csinglet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,6 @@ void				ft_putspace(int num_spaces);
 int					ft_ascii_cmp(char *s1, char *s2);
 void				ft_sort_list_ascii(char ***lst, int start, int stop);
 void				ft_free_strsplit(char ***strings);
-char                    	*ft_strndup(const char *src, size_t n);
+char				*ft_strndup(const char *src, size_t n);
 
 #endif

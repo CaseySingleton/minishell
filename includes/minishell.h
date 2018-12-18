@@ -1,18 +1,30 @@
-#include <unistd.h>
-
-#include "libft.h"
-#include "get_next_line.h"
-#include "ft_printf.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/12/14 15:20:38 by csinglet          #+#    #+#             */
+/*   Updated: 2018/12/14 15:20:42 by csinglet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+# include <unistd.h>
+
+# include "libft.h"
+# include "get_next_line.h"
+# include "ft_printf.h"
 
 # define TRUE 1
 # define FALSE 0
 # define ERROR -1
 
 /*
-**	¯\\_(ツ)_/¯
+**	¯\_(ツ)_/¯
 */
 
 typedef struct		s_env
@@ -29,8 +41,8 @@ typedef struct		s_mini
 	t_env			*env;
 	char			*name;
 	char			*raw_input;
+	char			*expanded_input;
 	char			*cd;
-	char			*pwd;
 	char			expansion;
 }					t_mini;
 
@@ -39,6 +51,19 @@ typedef struct		s_mini
 */
 
 void				minishell(char **ev);
+
+/*
+**	expansion.c
+*/
+
+char				*expand_env_vars(t_mini *mini, char *src);
+
+/*
+**	command_parsing.c
+*/
+
+int					check_built_in_commands(t_mini *mini);
+int					check_env_commands(t_mini *mini);
 
 /*
 **	built_in_commands.c
@@ -54,6 +79,7 @@ int					mini_env(t_env *env);
 **	cd_command.c
 */
 
+void				explicit_directory(char *path, t_mini *mini);
 void				mini_cd(char *path, t_mini *mini);
 void				cd_special(t_mini *mini);
 
@@ -63,6 +89,7 @@ void				cd_special(t_mini *mini);
 
 void				hostname(t_mini *mini);
 int					check_bin_for_exe(t_mini *mini);
+void				easter_eggish_thing(t_mini *mini);
 
 /*
 **	environment.c
@@ -81,7 +108,7 @@ void				env_unset(t_mini *mini);
 t_env				*env_new_node(char *name, char *value);
 void				env_push(t_env **list, t_env *to_add);
 void				env_free_node(t_env **node);
-// void				env_free(t_env **list);
+void				env_free(t_env **list);
 char				*env_search(t_env *env, char *name);
 
 /*

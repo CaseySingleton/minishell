@@ -14,14 +14,13 @@
 
 /*
 **	Notes:
-**	  - Still need to do the thing with ENV variables
-**	  - Add some cool extra stuff. Like maybe a game of some sort
+**	  - Unset is broken because of env var expansion. Can't search for the
+**		name anymore, gotta search for the value I guess? Or make a rule for
+**		unset;
 */
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	minishell(envp);
-	while (1)
-		;
 	return (0);
 }
