@@ -25,21 +25,17 @@ void		run_exe(const char *exe_path, char **args, char **envs)
 		exit(0);
 	}
 	else
-		wait(&child);
+		 wait(&child);
 }
 
 void		mini_run(t_mini *mini)
 {
-	char	**envs;
+	char	**envp;
 
-	if (is_exe(mini->av[0]) == FALSE || ft_strcmp(mini->av[0], "./") == 0)
-	{
-		ft_printf("Invalid binary: %s\n", mini->av[0]);
-		return ;
-	}
-	envs = env_to_list(mini->env);
-	run_exe(mini->av[0], mini->av, envs);
-	free_list(&envs);
+	envp = env_to_list(mini->env);
+	run_exe(mini->av[0], mini->av, envp);
+	if (envp != NULL)
+		free_list(&envp);
 }
 
 void		mini_echo(char *str)

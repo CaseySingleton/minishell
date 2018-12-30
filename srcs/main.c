@@ -12,14 +12,7 @@
 
 #include "minishell.h"
 
-/*
-**	Notes:
-**	  - Unset is broken because of env var expansion. Can't search for the
-**		name anymore, gotta search for the value I guess? Or make a rule for
-**		unset;
-*/
-
-int	main(int argc, char *argv[], char *envp[])
+int			main(int argc, char *argv[], char *envp[])
 {
 	minishell(envp);
 	return (0);

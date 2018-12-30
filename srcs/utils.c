@@ -25,7 +25,9 @@ int				is_exe(const char *exe_path)
 	struct stat	s;
 
 	stat(exe_path, &s);
-	return ((((s.st_mode & S_IXUSR) > 0) ? TRUE : FALSE));
+	if (s.st_mode & S_IFREG && s.st_mode & S_IXUSR)
+		return (TRUE);
+	return (FALSE);
 }
 
 char			**env_to_list(t_env *env)

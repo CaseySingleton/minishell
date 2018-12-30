@@ -79,7 +79,6 @@ int					mini_env(t_env *env);
 **	cd_command.c
 */
 
-void				explicit_directory(char *path, t_mini *mini);
 void				mini_cd(char *path, t_mini *mini);
 void				cd_special(t_mini *mini);
 
@@ -88,7 +87,7 @@ void				cd_special(t_mini *mini);
 */
 
 void				hostname(t_mini *mini);
-int					check_bin_for_exe(t_mini *mini);
+int					check_bins(t_mini *mini);
 void				easter_eggish_thing(t_mini *mini);
 
 /*

@@ -29,13 +29,13 @@ static void	commands(t_mini *mini)
 		return ;
 	else if (check_env_commands(mini) == TRUE)
 		return ;
-	else if (ft_strncmp(mini->av[0], "/", 1) == 0)
-		mini_cd(mini->av[0], mini);
+	else if (ft_strcmp(mini->av[0], "cd") == 0 && is_dir(mini->av[1]) == TRUE)
+		mini_cd(mini->av[1], mini);
+	else if (is_exe(mini->av[0]) == TRUE)
+		mini_run(mini);
 	else if (mini->ac == 2 && ft_strcmp(mini->av[1], "time") == 0)
 		easter_eggish_thing(mini);
-	else if (ft_strncmp(mini->av[0], "./", 2) == 0)
-		mini_run(mini);
-	else if (check_bin_for_exe(mini) == FALSE)
+	else if (check_bins(mini) == FALSE)
 		ft_printf("command: %s: not found\n", mini->av[0]);
 }
 
@@ -78,9 +78,7 @@ void		minishell(char *envp[])
 {
 	t_mini	mini;
 
-	ft_printf("🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢\n");
 	ft_printf("🐢 \e[5;30;30mStarting TutrleShell\e[m 🐢\n");
-	ft_printf("🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢\n");
 	ft_bzero(&mini, sizeof(t_mini));
 	env_init(&(mini.env), envp);
 	mini_loop(&mini);

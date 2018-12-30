@@ -21,31 +21,41 @@ void		hostname(t_mini *mini)
 	mini->name = ft_strdup(mini->av[1]);
 }
 
-int			check_bin_for_exe(t_mini *mini)
+static int	check_bin(t_mini *mini, char *path, char *binary, char **envp)
 {
-	char	*bin_path;
-	char	*usr_bin_path;
-	char	**envs;
-	int		bin_check;
-	int		usr_bin_check;
+	char	*full_path;
+	int		status;
 
-	bin_path = ft_strjoin("/bin/", mini->av[0]);
-	usr_bin_path = ft_strjoin("/usr/bin/", mini->av[0]);
-	bin_check = is_exe(bin_path);
-	usr_bin_check = is_exe(usr_bin_path);
-	if (bin_check == TRUE || usr_bin_check == TRUE)
-	{
-		envs = env_to_list(mini->env);
-		if (bin_check == TRUE)
-			run_exe(bin_path, mini->av, envs);
-		else if (usr_bin_check == TRUE)
-			run_exe(usr_bin_path, mini->av, envs);
-		if (envs)
-			free_list(&envs);
-	}
-	free(bin_path);
-	free(usr_bin_path);
-	return (bin_check || usr_bin_check);
+	full_path = ft_strjoin(path, "/");
+	full_path = ft_strjoin_free_s1(full_path, binary);
+	if ((status = is_exe(full_path)) == TRUE)
+		run_exe(full_path, mini->av, envp);
+	if (full_path != NULL)
+		free(full_path);
+	return (status);
+}
+
+int			check_bins(t_mini *mini)
+{
+	char	*path;
+	char	**paths;
+	char	**envp;
+	int		ret;
+	int		i;
+
+	ret = FALSE;
+	i = -1;
+	if ((path = env_search(mini->env, "PATH")) == NULL)
+		return (FALSE);
+	paths = ft_strsplit(path, ':');
+	envp = env_to_list(mini->env);
+	while (paths[++i] != NULL && ret != TRUE)
+		ret = check_bin(mini, paths[i], mini->av[0], envp);
+	if (paths != NULL)
+		free_list(&paths);
+	if (envp != NULL)
+		free_list(&envp);
+	return (ret);
 }
 
 void		easter_eggish_thing(t_mini *mini)
@@ -59,5 +69,5 @@ void		easter_eggish_thing(t_mini *mini)
 	else if (ft_strcmp(mini->av[0], "avocado") == 0)
 		mini->name = ft_strdup("🥑");
 	else if (ft_strcmp(mini->av[0], "party") == 0)
-		mini->name = ft_strdup("🎉🎊🎉");
+		mini->name = ft_strdup("🎉");
 }

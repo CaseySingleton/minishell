@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void		explicit_directory(char *path, t_mini *mini)
+static void	change_direcotry_and_update_info(char *path, t_mini *mini)
 {
 	chdir(path);
 	update_pwd(mini);
@@ -38,7 +38,7 @@ void		mini_cd(char *path, t_mini *mini)
 	else
 		fixed_path = ft_strdup(path);
 	if (is_dir(fixed_path) == TRUE)
-		explicit_directory(fixed_path, mini);
+		change_direcotry_and_update_info(fixed_path, mini);
 	else
 		ft_printf("%s: not a valid directory\n", fixed_path);
 	free(fixed_path);
