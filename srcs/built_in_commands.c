@@ -6,7 +6,7 @@
 /*   By: csinglet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/13 21:04:06 by csinglet          #+#    #+#             */
-/*   Updated: 2018/12/13 21:04:07 by csinglet         ###   ########.fr       */
+/*   Updated: 2019/01/05 16:35:21 by csinglet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void		run_exe(const char *exe_path, char **args, char **envs)
 		exit(0);
 	}
 	else
-		 wait(&child);
+		wait(&child);
 }
 
 void		mini_run(t_mini *mini)
@@ -40,12 +40,25 @@ void		mini_run(t_mini *mini)
 
 void		mini_echo(char *str)
 {
+	int		i;
+	int		j;
 	char	*echo;
 
-	if (str[0] == '"')
-		ft_copy_until(&echo, str + 1, '"');
+	i = 0;
+	j = 0;
+	while (str[i] == ' ')
+		i++;
+	if (str[i] == '"')
+	{
+		while (str[i] == '"')
+			i++;
+		while (str[j + i] != '"' && str[j + i] != '\0')
+			j++;
+	}
 	else
-		ft_copy_until(&echo, str, ' ');
+		while (str[i + j] != ' ' && str[i + j] != '"' && str[i + j] != '\0')
+			j++;
+	echo = ft_strndup(str + i, j);
 	ft_printf("%s\n", echo);
 	free(echo);
 }

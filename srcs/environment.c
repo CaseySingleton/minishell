@@ -77,18 +77,18 @@ void		env_set(t_mini *mini)
 
 	cur = mini->env;
 	i = -1;
-	while (mini->av[0][++i] != '\0')
+	while (mini->av[1][++i] != '\0')
 	{
-		if (mini->av[0][i] < 'A' || mini->av[0][i] > 'Z')
+		if (mini->av[1][i] < 'A' || mini->av[1][i] > 'Z')
 		{
 			ft_printf("%s: Invalid syntax: must use all capital letters\n",
-			mini->av[0]);
+			mini->av[1]);
 			return ;
 		}
 	}
 	while (cur != NULL)
 	{
-		if (ft_strcmp(mini->av[0], cur->name) == 0)
+		if (ft_strcmp(mini->av[1], cur->name) == 0)
 		{
 			free(cur->value);
 			cur->value = ft_strdup(mini->av[2]);
@@ -96,7 +96,7 @@ void		env_set(t_mini *mini)
 		}
 		cur = cur->next;
 	}
-	env_push(&mini->env, env_new_node(mini->av[0], mini->av[2]));
+	env_push(&mini->env, env_new_node(mini->av[1], mini->av[2]));
 }
 
 void		env_unset(t_mini *mini)

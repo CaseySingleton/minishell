@@ -12,31 +12,36 @@
 
 #include "libft.h"
 
-static int		is_space(char c)
+static inline int	is_space(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
 		return (1);
 	return (0);
 }
 
-char			*ft_strtrim(char const *s)
+char				*ft_strtrim(char const *s)
 {
-	char	*new_str;
-	int		index;
-	int		len;
+	char			*trim;
+	int				start;
+	int				end;
+	int				i;
 
 	if (s == NULL)
-		return (0);
-	len = ft_strlen(s);
-	while (is_space(s[len - 1]))
-		len--;
-	while (is_space(*s) && len--)
-		s++;
-	if (!(new_str = (char *)malloc(len + 1)))
-		return (0);
-	index = -1;
-	while (++index < len)
-		new_str[index] = s[index];
-	new_str[index] = '\0';
-	return (new_str);
+		return (NULL);
+	start = 0;
+	while (is_space(s[start]) == 1 && s[start] != '\0')
+		start++;
+	end = ft_strlen(s);
+	while (is_space(s[end - 1]) == 1 && end >= start)
+		end--;
+	if (!(trim = ft_strnew(end - start)))
+		return (NULL);
+	i = 0;
+	while (start < end)
+	{
+		trim[i] = s[start];
+		i++;
+		start++;
+	}
+	return (trim);
 }

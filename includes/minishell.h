@@ -80,7 +80,6 @@ int					mini_env(t_env *env);
 */
 
 void				mini_cd(char *path, t_mini *mini);
-void				cd_special(t_mini *mini);
 
 /*
 **	extra_commands.c

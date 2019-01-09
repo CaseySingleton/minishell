@@ -25,9 +25,12 @@ void		mini_cd(char *path, t_mini *mini)
 	char	*fixed_path;
 
 	test = NULL;
-	if (path == NULL)
+	if (path == NULL || ft_strcmp(path, "-") == 0)
 	{
-		test = env_search(mini->env, "HOME");
+		if (path == NULL)
+			test = env_search(mini->env, "HOME");
+		else
+			test = env_search(mini->env, "OLDPWD");
 		if (test == NULL)
 		{
 			ft_printf("no valid directory\n");

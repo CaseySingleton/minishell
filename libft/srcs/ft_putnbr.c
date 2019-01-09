@@ -12,28 +12,13 @@
 
 #include "libft.h"
 
-static int		ft_nlen(int n)
-{
-	int		len;
-
-	len = 1;
-	if (n == 0)
-		return (1);
-	while (n / 10 != 0)
-	{
-		n /= 10;
-		len *= 10;
-	}
-	return (len);
-}
-
 void			ft_putnbr(int n)
 {
 	int		neg_flag;
 	int		len;
 
 	neg_flag = 1;
-	len = ft_nlen(n);
+	len = ft_numlen(n);
 	if (n < 0)
 	{
 		neg_flag = -1;

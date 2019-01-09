@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-static int		ft_wrdlen(char const *str, char c)
+static int		ft_wordlen(char const *str, char c)
 {
 	int				len;
 
@@ -41,8 +41,8 @@ char			**ft_strsplit(char const *s, char c)
 	{
 		while (s[j] == c && s[j] != '\0')
 			j++;
-		splits[i] = ft_strsub(s + j, 0, ft_wrdlen(s + j, c));
-		j += ft_wrdlen(s + j, c);
+		splits[i] = ft_strsub(s + j, 0, ft_wordlen(s + j, c));
+		j += ft_wordlen(s + j, c);
 	}
 	return (splits);
 }

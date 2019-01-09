@@ -37,9 +37,9 @@ int			check_env_commands(t_mini *mini)
 	check = 1;
 	if ((check = ft_strcmp(mini->av[0], "env")) == 0)
 		mini_env(mini->env);
-	else if (mini->ac == 3 && (check = ft_strcmp(mini->av[1], "=")) == 0)
+	else if (mini->ac == 3 && (check = ft_strcmp(mini->av[0], "setenv")) == 0)
 		env_set(mini);
-	else if ((check = ft_strcmp(mini->av[0], "unset")) == 0 && mini->ac == 2)
+	else if ((check = ft_strcmp(mini->av[0], "unsetenv")) == 0 && mini->ac == 2)
 		env_unset(mini);
 	return (check == 0 ? 1 : 0);
 }

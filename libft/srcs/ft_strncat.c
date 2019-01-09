@@ -20,10 +20,8 @@ char	*ft_strncat(char *dest, const char *addition, size_t length)
 	while (*dest_cpy)
 		dest_cpy++;
 	while (length--)
-	{
 		if (!(*dest_cpy++ = *addition++))
 			return (dest_cpy);
-	}
 	*dest_cpy = '\0';
 	return (dest);
 }

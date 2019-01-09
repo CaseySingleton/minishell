@@ -12,15 +12,25 @@
 
 #include "minishell.h"
 
-static int	only_spaces(char *str)
+static int	only_spaces(char **str)
 {
+	char	*temp;
 	int		i;
+	int		ret;
 
 	i = -1;
-	while (str[++i] != '\0')
-		if (str[i] != ' ')
-			return (0);
-	return (1);
+	ret = TRUE;
+	while ((*str)[++i] != '\0')
+	{
+		if ((*str)[i] == '\t')
+			(*str)[i] = ' ';
+		if (ret == TRUE && (*str)[i] != ' ')
+			ret = FALSE;
+	}
+	temp = ft_strtrim(*str);
+	free(*str);
+	*str = temp;
+	return (ret);
 }
 
 static void	commands(t_mini *mini)
@@ -59,7 +69,7 @@ static void	mini_loop(t_mini *mini)
 				mini->name);
 		get_next_line(1, &mini->raw_input);
 		if (ft_strcmp(mini->raw_input, "\0") == 0 ||
-			only_spaces(mini->raw_input) == 1)
+			only_spaces(&(mini->raw_input)) == 1)
 		{
 			free(mini->raw_input);
 			continue ;

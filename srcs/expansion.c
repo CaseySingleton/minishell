@@ -12,102 +12,102 @@
 
 #include "minishell.h"
 
-static int		is_env_var(char *str)
+static void		append_env_var(char **dest, char *addition)
 {
-	int			i;
-
-	i = -1;
-	if (str[0] == '$' && str[1] == '(')
-		while (str[++i] != '\0')
-			if (str[i] == ')')
-				return (TRUE);
-	return (FALSE);
+	if (*dest == NULL)
+		*dest = ft_strdup(addition);
+	else
+		*dest = ft_strjoin_free_s1(*dest, addition);
+	free(addition);
+	addition = NULL;
 }
 
-static char		*get_env_var(t_mini *mini, char *src)
+static int		ft_copy_until_env_var(char **dest, char *src)
 {
 	int			i;
-	char		*value;
-	char		*env_name;
-	char		*test;
+	int			quote_flag;
 
-	i = 2;
-	value = NULL;
-	env_name = NULL;
-	if (src[0] == '~' && (test = env_search(mini->env, "HOME")) != NULL)
-		value = ft_strdup(test);
-	else if (src[0] == '-' && (test = env_search(mini->env, "OLDPWD")) != NULL)
-		value = ft_strdup(test);
-	else if (is_env_var(src) == TRUE)
+	i = 0;
+	quote_flag = 0;
+	while (src[i] != '\0')
 	{
-		i += ft_copy_until(&env_name, src + 2, ')');
-		if ((test = env_search(mini->env, env_name)) != NULL)
-			value = ft_strdup(env_search(mini->env, env_name));
-		if (env_name)
+		if (src[i] == '"')
 		{
-			free(env_name);
-			env_name = NULL;
+			while (src[i] == '"')
+				i++;
+			quote_flag ^= (1 << 0);
 		}
+		if (quote_flag == 0 && (src[i] == '$' || src[i] == '~'))
+			break ;
+		i++;
 	}
-	return (value);
+	*dest = ft_strndup(src, i);
+	return (i);
 }
 
-static int		skip_env_var(char *src)
+static int		get_var_name(char **dest, char *src)
 {
 	int			i;
 
 	i = 0;
-	if (src[i] == '~')
-		;
-	else if (src[i] == '$' && src[i + 1] == '(')
+	if (*src == '~')
 	{
-		while (src[i] != ')' && src[i] != '\0')
-			i++;
-		if (src[i] == '\0')
-			return (0);
+		*dest = ft_strdup("~");
+		i = 1;
 	}
-	return (i + 1);
+	else if (*src == '$')
+	{
+		while (src[i] != ' ' && src[i] != '\0')
+			i++;
+		*dest = ft_strndup(src, i);
+	}
+	return (i);
 }
 
-static void		append_env_var(char *src, char **expanded, char *env_value,
-								int i)
+static char		*get_env_value(t_mini *m, char *name)
 {
-	if (*expanded == NULL && i == 0)
-		*expanded = ft_strdup(env_value);
-	else if (*expanded == NULL && i > 0)
-		*expanded = ft_strjoin_free_s1(ft_strndup(src, i), env_value);
+	int			i;
+	char		*value;
+	char		*test;
+
+	i = 2;
+	value = NULL;
+	if (*name == '~' && (test = env_search(m->env, "HOME")) != NULL)
+		value = ft_strdup(test);
+	else if (name[1] == '-' && (test = env_search(m->env, "OLDPWD")) != NULL)
+		value = ft_strdup(test);
+	else if ((test = env_search(m->env, name + 1)) != NULL)
+		value = ft_strdup(env_search(m->env, name + 1));
 	else
-	{
-		*expanded = ft_strjoin_free(*expanded, ft_strndup(src, i));
-		*expanded = ft_strjoin_free_s1(*expanded, env_value);
-	}
+		value = ft_strdup(name);
+	free(name);
+	name = NULL;
+	return (value);
 }
 
 char			*expand_env_vars(t_mini *mini, char *src)
 {
-	int			i[3];
+	int			bytes_copied;
 	char		*expanded;
-	char		*env_value;
+	char		*env_var_name;
+	char		*env_var_value;
+	char		*cut;
 
-	ft_bzero(i, sizeof(int) * 3);
+	bytes_copied = 0;
 	expanded = NULL;
-	while (src[i[0]] != '\0')
+	env_var_name = NULL;
+	env_var_value = NULL;
+	cut = NULL;
+	while (src[bytes_copied] != '\0')
 	{
-		if (src[i[0]] == '"')
-			i[2] = (i[2] == TRUE ? FALSE : TRUE);
-		if (!i[2] && (env_value = get_env_var(mini, src + i[0])) != NULL)
+		bytes_copied += ft_copy_until_env_var(&cut, src + bytes_copied);
+		append_env_var(&expanded, cut);
+		if (src[bytes_copied] != '\0')
 		{
-			append_env_var(src + i[1], &expanded, env_value, i[0] - i[1]);
-			i[0] += skip_env_var(src + i[0]);
-			free(env_value);
-			i[1] = i[0];
+			bytes_copied += get_var_name(&env_var_name, src + bytes_copied);
+			env_var_value = get_env_value(mini, env_var_name);
+			append_env_var(&expanded, env_var_value);
 		}
-		else
-			i[0]++;
 	}
-	if (expanded != NULL)
-		expanded = ft_strjoin_free_s1(expanded, src + i[1]);
-	else
-		expanded = ft_strdup(src);
 	return (expanded);
 }
